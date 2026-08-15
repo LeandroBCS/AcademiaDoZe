@@ -1,9 +1,6 @@
 ﻿// LEANDRO BATISTA CORDOVA DOS SANTOS
 
 using AcademiaDoZe.Domain.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AcademiaDoZe.Domain.Entities
 {

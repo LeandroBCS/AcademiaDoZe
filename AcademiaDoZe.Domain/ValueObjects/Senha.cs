@@ -13,16 +13,29 @@ public record Senha
         Valor = valor;
     }
 
-    public static Result<Senha> Criar(string valor)
+    public static Result<Senha> Criar(string senha)
     {
-        if (NormalizadoService.TextoVazioOuNulo(valor))
-            return Result<Senha>.Failure("Senha", "SENHA_OBRIGATORIA");
+        var notifications = new List<Notification>();
 
-        if (valor.Length < 6)
-            return Result<Senha>.Failure("Senha", "SENHA_TAMANHO_MINIMO");
+        if (NormalizacaoService.TextoVazioOuNulo(senha))
+        {
+            notifications.Add(new Notification("Senha", "SENHA_OBRIGATORIO"));
+            return Result<Senha>.Failure(notifications);
+        }
 
-        return Result<Senha>.Success(new Senha(valor));
+        if (senha.Length < 6) 
+        {
+            notifications.Add(new Notification("Senha", "TAMANHO_INVALIDO"));
+        }
+
+        if (!senha.Any(char.IsUpper))
+        {
+            notifications.Add(new Notification("Senha", "REQUER_LETRA_MAIUSCULA"));
+        }
+
+        if (notifications.Count > 0)
+            return Result<Senha>.Failure(notifications);
+
+        return Result<Senha>.Success(new Senha(senha));
     }
-
-    public override string ToString() => Valor;
 }

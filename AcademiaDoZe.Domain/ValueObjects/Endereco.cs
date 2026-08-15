@@ -8,6 +8,7 @@ namespace AcademiaDoZe.Domain.ValueObjects;
 public record Endereco
 {
     public Logradouro Logradouro { get; }
+    public int LogradouroId => Logradouro?.Id ?? 0;
     public string Numero { get; }
     public string Complemento { get; }
 
@@ -25,12 +26,12 @@ public record Endereco
         if (logradouro == null)
             notifications.Add(new Notification("Endereco", "LOGRADOURO_OBRIGATORIO"));
 
-        if (NormalizadoService.TextoVazioOuNulo(numero))
+        if (NormalizacaoService.TextoVazioOuNulo(numero))
             notifications.Add(new Notification("Numero", "NUMERO_OBRIGATORIO"));
         else
-            numero = NormalizadoService.LimparEspacos(numero);
+            numero = NormalizacaoService.LimparEspacos(numero);
 
-        complemento = NormalizadoService.LimparEspacos(complemento);
+        complemento = NormalizacaoService.LimparEspacos(complemento);
 
         if (notifications.Count != 0)
             return Result<Endereco>.Failure(notifications);

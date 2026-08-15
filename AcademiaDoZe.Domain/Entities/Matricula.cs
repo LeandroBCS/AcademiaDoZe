@@ -35,7 +35,7 @@ public class Matricula : Entity, IAggregateRoot
     public static Result<Matricula> Criar(int id, Aluno aluno, MatriculaPlano plano, DateOnly dataInicio, string objetivo, MatriculaRestricoes restricoesMedicas, Arquivo? laudoMedico, string observacoesRestricoes = "")
     {
         var notifications = new List<Notification>();
-        
+
         // Validações e normalizações
         if (aluno == null)
         {
@@ -46,7 +46,7 @@ public class Matricula : Entity, IAggregateRoot
             notifications.Add(new Notification("LaudoMedico", "MENOR_16_LAUDO_OBRIGATORIO"));
         }
         if (!Enum.IsDefined(plano)) notifications.Add(new Notification("Plano", "PLANO_INVALIDO"));
-        
+
         if (dataInicio == default) notifications.Add(new Notification("DataInicio", "DATA_INICIO_OBRIGATORIO"));
 
         // Cálculo da DataFim no domínio baseado no tipo de plano
@@ -63,18 +63,18 @@ public class Matricula : Entity, IAggregateRoot
             };
         }
 
-        if (NormalizadoService.TextoVazioOuNulo(objetivo)) notifications.Add(new Notification("Objetivo", "OBJETIVO_OBRIGATORIO"));
-        else objetivo = NormalizadoService.LimparEspacos(objetivo);
-        
+        if (NormalizacaoService.TextoVazioOuNulo(objetivo)) notifications.Add(new Notification("Objetivo", "OBJETIVO_OBRIGATORIO"));
+        else objetivo = NormalizacaoService.LimparEspacos(objetivo);
+
         if (restricoesMedicas != MatriculaRestricoes.None && laudoMedico == null) notifications.Add(new Notification("LaudoMedico", "RESTRICOES_LAUDO_OBRIGATORIO"));
-        
-        observacoesRestricoes = NormalizadoService.LimparEspacos(observacoesRestricoes);
-        
+
+        observacoesRestricoes = NormalizacaoService.LimparEspacos(observacoesRestricoes);
+
         if (notifications.Count != 0) return Result<Matricula>.Failure(notifications);
-        
+
         // criação e retorno do objeto
         var matricula = new Matricula(id, aluno!.Id, plano, dataInicio, dataFim, objetivo, restricoesMedicas, laudoMedico, observacoesRestricoes);
-        
+
         return Result<Matricula>.Success(matricula);
     }
 }

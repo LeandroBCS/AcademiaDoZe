@@ -1,9 +1,5 @@
 ﻿// LEANDRO BATISTA CORDOVA DOS SANTOS
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace AcademiaDoZe.Domain.Enums
 {
     [Flags]

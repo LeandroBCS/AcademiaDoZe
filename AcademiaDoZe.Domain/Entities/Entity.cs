@@ -1,7 +1,5 @@
 ﻿// LEANDRO BATISTA CORDOVA DOS SANTOS
 
-using AcademiaDoZe.Domain.Exceptions;
-
 namespace AcademiaDoZe.Domain.Entities;
 
 public abstract class Entity
