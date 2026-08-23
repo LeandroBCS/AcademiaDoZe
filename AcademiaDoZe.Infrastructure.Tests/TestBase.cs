@@ -1,11 +1,12 @@
-﻿using AcademiaDoZe.Infrastructure.Data;
+﻿//LEANDRO BATISTA CORDOVA DOS SANTOS
+using AcademiaDoZe.Infrastructure.Data;
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly, DisableTestParallelization = true)]
 namespace AcademiaDoZe.Infrastructure.Tests;
 
 public abstract class TestBase
 {
     // Alterne o SGBD alvo dos testes trocando apenas a constante abaixo:
-    private const DatabaseType SelectedDatabaseType = DatabaseType.Sqlite;
+    private const DatabaseType SelectedDatabaseType = DatabaseType.MySql;
     protected string ConnectionString { get; }
     protected DatabaseType DatabaseType { get; }
     protected TestBase()
@@ -14,8 +15,8 @@ public abstract class TestBase
         // Ajuste a ConnectionString com caminhos e credenciais válidas
         ConnectionString = DatabaseType switch
         {
-            DatabaseType.SqlServer => "Server=localhost;Database=db_academia_do_ze;User Id=sa;Password=abcBolinhas12345;TrustServerCertificate=True;Encrypt=True;",
-            DatabaseType.MySql => "Server=localhost;Database=db_academia_do_ze;User Id=root;Password=abcBolinhas12345;",
+            DatabaseType.SqlServer => "Server=localhost,1433;Database=db_academia_do_ze;User Id=sa;Password=abcBolinhas12345;TrustServerCertificate=True;Encrypt=True;",
+            DatabaseType.MySql => "Server=localhost;Port=3306;Database=db_academia_do_ze;User Id=root;Password=abcBolinhas12345;",
             DatabaseType.Sqlite => "Data Source=C:\\4° SEM - DEV\\AcademiaDoZe\\db_academia_do_ze.db;Cache=Shared;",
             _ => throw new ArgumentOutOfRangeException(nameof(DatabaseType), DatabaseType, "SGBD não suportado para testes.")
         };

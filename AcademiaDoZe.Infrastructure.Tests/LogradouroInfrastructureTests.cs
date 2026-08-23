@@ -22,14 +22,28 @@ public class LogradouroInfrastructureTests : TestBase
     {
         _repository = new LogradouroRepository(ConnectionString, DatabaseType);
     }
-    internal static async Task<Logradouro> CriarEInserirLogradouroAsync(LogradouroRepository logradouroRepo)
+    internal static async Task<Logradouro> CriarEInserirLogradouroAsync(
+    LogradouroRepository logradouroRepo)
     {
         var cep = GerarCep();
-        var logradouroResult = Logradouro.Criar(0, cep, "Rua de Teste", "Bairro Teste", "Lages", "SC", "Brasil");
+
+        var logradouroResult = Logradouro.Criar(
+            0,
+            cep,
+            "Leandro",
+            "Cordova",
+            "MySQL",
+            "SC",
+            "Brasil"
+        );
+
         if (logradouroResult.IsFailure)
         {
-            throw new Exception($"Falha ao criar Logradouro: {string.Join(", ", logradouroResult.Notifications.Select(n => n.Mensagem))}");
+            throw new Exception(
+                $"Falha ao criar Logradouro: " +
+                $"{string.Join(", ", logradouroResult.Notifications.Select(n => n.Mensagem))}");
         }
+
         return await logradouroRepo.Adicionar(logradouroResult.Value!);
     }
     // MÉTODOS DOS TESTES AQUI
@@ -38,13 +52,28 @@ public class LogradouroInfrastructureTests : TestBase
     public async Task Logradouro_Adicionar_E_ObterPorId_Sucesso()
     {
         var cep = GerarCep();
-        var logradouro = Logradouro.Criar(0, cep, "Rua das Flores", "Centro", "Lages", "SC", "Brasil").Value!;
+
+        var logradouro = Logradouro.Criar(
+            0,
+            cep,
+            "Leandro",
+            "Cordova",
+            "MySQL",
+            "SC",
+            "Brasil"
+        ).Value!;
+
         var inserido = await _repository.Adicionar(logradouro);
+
         Assert.NotNull(inserido);
         Assert.True(inserido.Id > 0);
         Assert.Equal(cep, inserido.Cep.Valor);
-        Assert.Equal("Rua das Flores", inserido.Nome);
+        Assert.Equal("Leandro", inserido.Nome);
+        Assert.Equal("Cordova", inserido.Bairro);
+        Assert.Equal("MySQL", inserido.Cidade);
+
         var obtido = await _repository.ObterPorId(inserido.Id);
+
         Assert.NotNull(obtido);
         Assert.Equal(inserido.Id, obtido.Id);
         Assert.Equal(cep, obtido.Cep.Valor);
@@ -68,16 +97,30 @@ public class LogradouroInfrastructureTests : TestBase
     public async Task Logradouro_Atualizar_Sucesso()
     {
         var logradouro = await CriarEInserirLogradouroAsync(_repository);
+
         var novoCep = GerarCep();
-        var logradouroAtualizado = Logradouro.Criar(logradouro.Id, novoCep, "Rua Nova", "Bairro Novo", "Florianópolis", "SC", "Brasil").Value!;
+
+        var logradouroAtualizado = Logradouro.Criar(
+            logradouro.Id,
+            novoCep,
+            "Leandro Atualizado",
+            "Cordova Atualizado",
+            "MySQL",
+            "SC",
+            "Brasil"
+        ).Value!;
+
         var resultado = await _repository.Atualizar(logradouroAtualizado);
+
         Assert.NotNull(resultado);
-        Assert.Equal("Rua Nova", resultado.Nome);
-        Assert.Equal("Bairro Novo", resultado.Bairro);
-        Assert.Equal("Florianópolis", resultado.Cidade);
+        Assert.Equal("Leandro Atualizado", resultado.Nome);
+        Assert.Equal("Cordova Atualizado", resultado.Bairro);
+        Assert.Equal("MySQL", resultado.Cidade);
+
         var noBanco = await _repository.ObterPorId(logradouro.Id);
+
         Assert.NotNull(noBanco);
-        Assert.Equal("Rua Nova", noBanco.Nome);
+        Assert.Equal("Leandro Atualizado", noBanco.Nome);
     }
     [Fact]
     public async Task Logradouro_Atualizar_LancaExcecaoQuandoInexistente()
@@ -131,28 +174,63 @@ public class LogradouroInfrastructureTests : TestBase
     public async Task Logradouro_ObterPorCidade_FiltragemCorreta()
     {
         var cep = GerarCep();
-        var cidadeUnica = "CidadeUnica_" + Guid.NewGuid().ToString("N")[..5];
-        var logradouro = Logradouro.Criar(0, cep, "Rua X", "Bairro Y", cidadeUnica, "SC", "Brasil").Value!;
+        var cidadeUnica = "MySQL_" + Guid.NewGuid().ToString("N")[..5];
+
+        var logradouro = Logradouro.Criar(
+            0,
+            cep,
+            "Leandro",
+            "Cordova",
+            cidadeUnica,
+            "SC",
+            "Brasil"
+        ).Value!;
+
         await _repository.Adicionar(logradouro);
-        var resultados = await _repository.ObterPorCidade(cidadeUnica.ToLower());
+
+        var resultados = await _repository.ObterPorCidade(cidadeUnica);
+
         Assert.NotNull(resultados);
         Assert.Single(resultados);
         Assert.Equal(cidadeUnica, resultados.First().Cidade);
-        var resultadosVazio = await _repository.ObterPorCidade("CidadeInexistente_123");
+
+        var resultadosVazio =
+            await _repository.ObterPorCidade("CidadeInexistente_123");
+
         Assert.Empty(resultadosVazio);
     }
     [Fact]
     public async Task Logradouro_ObterPorBairro_FiltragemCorreta()
     {
         var cep = GerarCep();
-        var cidade = "Cidade_" + Guid.NewGuid().ToString("N")[..5];
-        var bairro = "Bairro_" + Guid.NewGuid().ToString("N")[..5];
-        var logradouro = Logradouro.Criar(0, cep, "Rua Z", bairro, cidade, "SC", "Brasil").Value!;
+
+        var cidade = "MySQL_" + Guid.NewGuid().ToString("N")[..5];
+        var bairro = "Cordova_" + Guid.NewGuid().ToString("N")[..5];
+
+        var logradouro = Logradouro.Criar(
+            0,
+            cep,
+            "Leandro",
+            bairro,
+            cidade,
+            "SC",
+            "Brasil"
+        ).Value!;
+
         await _repository.Adicionar(logradouro);
-        var resultados = await _repository.ObterPorBairro(cidade, bairro);
+
+        var resultados =
+            await _repository.ObterPorBairro(cidade, bairro);
+
         Assert.NotNull(resultados);
         Assert.Single(resultados);
-        var resultadosVazio = await _repository.ObterPorBairro(cidade, "BairroInexistente");
+
+        var resultadosVazio =
+            await _repository.ObterPorBairro(
+                cidade,
+                "BairroInexistente"
+            );
+
         Assert.Empty(resultadosVazio);
     }
 }
