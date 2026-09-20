@@ -3,6 +3,7 @@
     <Project Path="AcademiaDoZe.Domain.Tests/AcademiaDoZe.Domain.Tests.csproj" Id="065e978b-f3ac-4611-ae48-145c1dfaf7fd" />
     <Project Path="AcademiaDoZe.Infrastructure.Tests/AcademiaDoZe.Infrastructure.Tests.csproj" Id="ab90ee43-7b7f-4dfb-a7b5-f83b39bec968" />
   </Folder>
+  <Project Path="AcademiaDoZe.Application/AcademiaDoZe.Application.csproj" Id="8cb2b293-d1b0-4141-a78c-9dae21965cc8" />
   <Project Path="AcademiaDoZe.Domain/AcademiaDoZe.Domain.csproj" />
   <Project Path="AcademiaDoZe.Infrastrucut/AcademiaDoZe.Infrastructure.csproj" Id="65bdf0ce-4a26-43a9-8cb0-e5f4e9882f83" />
 </Solution>
