@@ -1,4 +1,6 @@
-﻿using AcademiaDoZe.Application.Interfaces;
+﻿// Leandro Batista Cordova Dos Santos
+
+using AcademiaDoZe.Application.Interfaces;
 using AcademiaDoZe.Application.Services;
 using AcademiaDoZe.Domain.Repositories;
 using AcademiaDoZe.Infrastructure.Repositories;
