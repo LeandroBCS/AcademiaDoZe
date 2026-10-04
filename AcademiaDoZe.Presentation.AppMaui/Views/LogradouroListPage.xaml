@@ -1,69 +1,93 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-x:Class="AcademiaDoZe.Presentation.AppMaui.Views.LogradouroListPage"
-xmlns:vm="clr-namespace:AcademiaDoZe.Presentation.AppMaui.ViewModels"
-x:DataType="vm:LogradouroListViewModel"
-xmlns:dto="clr-namespace:AcademiaDoZe.Application.DTOs;assembly=AcademiaDoZe.Application"
-Title="{Binding Title}">
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AcademiaDoZe.Presentation.AppMaui.Views.LogradouroListPage"
+             xmlns:vm="clr-namespace:AcademiaDoZe.Presentation.AppMaui.ViewModels"
+             x:DataType="vm:LogradouroListViewModel"
+             xmlns:dto="clr-namespace:AcademiaDoZe.Application.DTOs;assembly=AcademiaDoZe.Application"
+             Title="{Binding Title}">
     <Grid RowDefinitions="Auto,*">
-        <!-- Search Bar com Picker de filtro -->
-        <Border Grid.Row="0" Style="{StaticResource CardBorder}" Margin="15,10">
-            <Grid ColumnDefinitions="Auto,10,*,10,Auto" VerticalOptions="Center">
-                <!-- Picker de filtro -->
-                <Picker Grid.Column="0" Title="" ItemsSource="{Binding FilterTypes}" SelectedItem="{Binding SelectedFilterType}" WidthRequest="110" HorizontalOptions="Start" HeightRequest="40" VerticalOptions="Center"/>
-                <!-- Entry de busca -->
-                <Entry Grid.Column="2" Text="{Binding SearchText}" Placeholder="Digite o valor..." HeightRequest="40" VerticalOptions="Center" Margin="0,0,0,0"/>
-                <!-- Botão de busca -->
-                <Button Grid.Column="4" Text="Buscar" Style="{StaticResource ButtonPrimary}" FontSize="14" WidthRequest="80" HeightRequest="40" Margin="0,0,0,0" Command="{Binding SearchLogradourosCommand}"/>
+
+        <!-- Barra de busca: filtro + valor + botão -->
+        <Border Grid.Row="0" Style="{StaticResource CardBorder}" Margin="16,16,16,8" Padding="12">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+                <Border Grid.Column="0" Style="{StaticResource InputBorder}" WidthRequest="116">
+                    <Picker Title="Filtro" ItemsSource="{Binding FilterTypes}" SelectedItem="{Binding SelectedFilterType}" VerticalOptions="Center"/>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource InputBorder}">
+                    <Entry Text="{Binding SearchText}" Placeholder="Digite o valor..." ReturnCommand="{Binding SearchLogradourosCommand}" VerticalOptions="Center"/>
+                </Border>
+                <Button Grid.Column="2" Text="Buscar" Style="{StaticResource ButtonPrimary}" FontSize="14" HeightRequest="46" Padding="18,0" Command="{Binding SearchLogradourosCommand}"/>
             </Grid>
         </Border>
-        <!-- Lista de Logradouros com FAB - "Floating Action Button" - Botão de Ação Flutuante -->
+
+        <!-- Lista de Logradouros com FAB (Floating Action Button) -->
         <Grid Grid.Row="1">
             <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
-                <CollectionView ItemsSource="{Binding Logradouros}" SelectionMode="None">
+                <CollectionView ItemsSource="{Binding Logradouros}" SelectionMode="None" Margin="16,0">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="12"/>
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.Header>
+                        <BoxView HeightRequest="6" Color="Transparent"/>
+                    </CollectionView.Header>
+                    <CollectionView.Footer>
+                        <!-- Espaço para o botão flutuante não cobrir o último item -->
+                        <BoxView HeightRequest="96" Color="Transparent"/>
+                    </CollectionView.Footer>
+
                     <CollectionView.EmptyView>
-                        <StackLayout VerticalOptions="Center">
-                            <Label Text="Nenhum logradouro encontrado" HorizontalOptions="Center" Style="{StaticResource SubHeadline}"/>
-                            <Button Text="Adicionar Primeiro Logradouro" Command="{Binding AddLogradouroCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="50" Margin="0,20,0,0"/>
-                        </StackLayout>
+                        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10" Padding="30">
+                            <Label Text="📭" FontSize="52" HorizontalOptions="Center"/>
+                            <Label Text="Nenhum logradouro encontrado" Style="{StaticResource CardTitle}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                            <Label Text="Tente outro filtro ou cadastre um novo endereço." Style="{StaticResource StatLabel}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                            <Button Text="Adicionar primeiro logradouro" Command="{Binding AddLogradouroCommand}" Style="{StaticResource ButtonPrimary}" Margin="0,14,0,0"/>
+                        </VerticalStackLayout>
                     </CollectionView.EmptyView>
+
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="dto:LogradouroDto">
-                            <Grid Padding="1" Margin="5">
-                                <Border Style="{StaticResource CardBorder}" Margin="10">
-                                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto,Auto">
-                                        <Label Grid.Row="0" Grid.Column="0" Text="{Binding Cep}" FontAttributes="Bold" Margin="0,0,0,5"/>
-                                        <Label Grid.Row="1" Grid.Column="0" Text="{Binding Nome}" Margin="0,0,0,5"/>
-                                        <Label Grid.Row="2" Grid.Column="0" Text="{Binding Bairro}" Margin="0,0,0,5"/>
-                                        <Label Grid.Row="3" Grid.Column="0" Margin="0,0,0,5">
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="{Binding Cidade}"/>
-                                                    <Span Text=" - "/>
-                                                    <Span Text="{Binding Estado}"/>
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
+                            <Border Style="{StaticResource CardBorder}">
+                                <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto,Auto" RowSpacing="6" ColumnSpacing="8">
 
-                                        <Label Grid.Row="4" Grid.Column="0" Text="{Binding Pais}" Margin="0,0,0,5"/>
+                                    <!-- CEP + ações -->
+                                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource ChipBorder}" HorizontalOptions="Start" VerticalOptions="Center">
+                                        <Label Text="{Binding Cep}" Style="{StaticResource ChipLabel}"/>
+                                    </Border>
+                                    <Button Grid.Row="0" Grid.Column="1" Text="Editar" Style="{StaticResource ButtonSmall}" Clicked="OnEditButtonClicked"/>
+                                    <Button Grid.Row="0" Grid.Column="2" Text="Excluir" Style="{StaticResource ButtonDanger}" Clicked="OnDeleteButtonClicked"/>
 
-                                        <!-- Botões de Ação -->
+                                    <!-- Rua -->
+                                    <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Nome}" Style="{StaticResource CardTitle}" Margin="0,8,0,0"/>
 
-                                        <Button Grid.Row="0" Grid.Column="1" Text="Editar" Style="{StaticResource ButtonSmall}" Margin="4,0" Clicked="OnEditButtonClicked" />
-                                        <Button Grid.Row="0" Grid.Column="2" Text="Excluir" Style="{StaticResource ButtonDanger}" Margin="4,0" Clicked="OnDeleteButtonClicked" />
-                                    </Grid>
-                                </Border>
-                            </Grid>
+                                    <!-- Bairro • Cidade - UF • País -->
+                                    <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource StatLabel}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding Bairro}"/>
+                                                <Span Text="  •  "/>
+                                                <Span Text="{Binding Cidade}"/>
+                                                <Span Text=" - "/>
+                                                <Span Text="{Binding Estado}"/>
+                                                <Span Text="  •  "/>
+                                                <Span Text="{Binding Pais}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </Grid>
+                            </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </RefreshView>
+
             <!-- Floating Action Button -->
             <Button Text="+" Command="{Binding AddLogradouroCommand}" Style="{StaticResource ButtonPrimary}"
-WidthRequest="56" HeightRequest="56" HorizontalOptions="End" VerticalOptions="End" Margin="20,20,20,20">
+                    WidthRequest="58" HeightRequest="58" CornerRadius="29" Padding="0" FontSize="30"
+                    HorizontalOptions="End" VerticalOptions="End" Margin="24">
                 <Button.Shadow>
-                    <Shadow Brush="{AppThemeBinding Light=Black, Dark=Gray}" Offset="0,4" Radius="8" Opacity="0.3"/>
+                    <Shadow Brush="#E0A526" Offset="0,6" Radius="14" Opacity="0.45"/>
                 </Button.Shadow>
             </Button>
         </Grid>
