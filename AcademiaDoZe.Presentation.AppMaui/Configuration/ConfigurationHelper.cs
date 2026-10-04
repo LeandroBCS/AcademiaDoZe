@@ -20,7 +20,7 @@ public static class ConfigurationHelper
         }
         else
         {
-            const string dbServer = "10.30.21.16";
+            const string dbServer = "127.0.0.1";
             const string dbDatabase = "db_academia_do_ze";
             const string dbUser = "root";
             const string dbPassword = "abcBolinhas12345";
