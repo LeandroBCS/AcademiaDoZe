@@ -66,11 +66,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiImage Remove="Resources\Images\academiadoze.png" />
+	  <MauiImage Remove="Resources\Images\Gemini_Generated_Image_enhwxdenhwxdenhw.jpg" />
+	  <MauiImage Remove="Resources\Images\Gemini_Generated_Image_enhwxdenhwxdenhw.png" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <None Remove="Resources\Images\academiadoze.png" />
+	  <None Remove="Resources\Images\Gemini_Generated_Image_enhwxdenhwxdenhw.jpg" />
+	  <None Remove="Resources\Images\Gemini_Generated_Image_enhwxdenhwxdenhw.png" />
 	</ItemGroup>
 
 	<ItemGroup>
