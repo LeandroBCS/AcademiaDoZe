@@ -8,7 +8,7 @@ public static class ConfigurationHelper
     public static void ConfigureServices(IServiceCollection services)
     {
         // 1. Tipo de banco de dados: SqlServer, MySql ou Sqlite
-        var databaseType = AppDatabaseType.Sqlite;
+        var databaseType = AppDatabaseType.MySql;
         // 2. Configuração da Connection String de acordo com o banco escolhido
         string connectionString;
         if (databaseType == AppDatabaseType.Sqlite)
