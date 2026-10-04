@@ -1,4 +1,8 @@
-﻿<Style TargetType="Border" x:Key="CardBorder">
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    
+<Style TargetType="Border" x:Key="CardBorder">
     <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray900}}"/>
     <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"/>
     <Setter Property="StrokeThickness" Value="1"/>
@@ -36,3 +40,4 @@
     <Setter Property="HeightRequest" Value="32"/>
     <Setter Property="WidthRequest" Value="60"/>
 </Style>
+</ResourceDictionary>
