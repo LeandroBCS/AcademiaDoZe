@@ -95,6 +95,15 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource PrimaryDark}}"/>
     </Style>
 
+    <!-- Ícone da fonte Material Icons (use com Text="&#xe7f1;") -->
+    <Style x:Key="IconGlyph" TargetType="Label" BasedOn="{StaticResource LabelBase}">
+        <Setter Property="FontFamily" Value="MaterialIcons"/>
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource PrimaryDark}}"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
     <!-- =====================================================================
          CONTAINERS (Border)
          ===================================================================== -->
@@ -136,6 +145,15 @@
         <Setter Property="WidthRequest" Value="46"/>
         <Setter Property="HeightRequest" Value="46"/>
         <Setter Property="HorizontalOptions" Value="Start"/>
+    </Style>
+
+    <!-- Caixa de aviso / informação -->
+    <Style x:Key="InfoBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource GoldSoftDark}}"/>
+        <Setter Property="Stroke" Value="Transparent"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
+        <Setter Property="Padding" Value="14,12"/>
     </Style>
 
     <!-- Barra inferior de ações -->

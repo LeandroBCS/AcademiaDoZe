@@ -17,7 +17,12 @@
                 <Border Grid.Column="1" Style="{StaticResource InputBorder}">
                     <Entry Text="{Binding SearchText}" Placeholder="Digite o valor..." ReturnCommand="{Binding SearchLogradourosCommand}" VerticalOptions="Center"/>
                 </Border>
-                <Button Grid.Column="2" Text="Buscar" Style="{StaticResource ButtonPrimary}" FontSize="14" HeightRequest="46" Padding="18,0" Command="{Binding SearchLogradourosCommand}"/>
+                <Button Grid.Column="2" Text="Buscar" Style="{StaticResource ButtonPrimary}" FontSize="14" HeightRequest="46" Padding="18,0" Command="{Binding SearchLogradourosCommand}">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;"
+                                         Color="{StaticResource PrimaryDarkText}"/>
+                    </Button.ImageSource>
+                </Button>
             </Grid>
         </Border>
 
@@ -42,7 +47,12 @@
                             <Label Text="📭" FontSize="52" HorizontalOptions="Center"/>
                             <Label Text="Nenhum logradouro encontrado" Style="{StaticResource CardTitle}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
                             <Label Text="Tente outro filtro ou cadastre um novo endereço." Style="{StaticResource StatLabel}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                            <Button Text="Adicionar primeiro logradouro" Command="{Binding AddLogradouroCommand}" Style="{StaticResource ButtonPrimary}" Margin="0,14,0,0"/>
+                            <Button Text="Adicionar primeiro logradouro" Command="{Binding AddLogradouroCommand}" Style="{StaticResource ButtonPrimary}" Margin="0,14,0,0">
+                                <Button.ImageSource>
+                                    <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe145;"
+                                                     Color="{StaticResource PrimaryDarkText}"/>
+                                </Button.ImageSource>
+                            </Button>
                         </VerticalStackLayout>
                     </CollectionView.EmptyView>
 
@@ -55,8 +65,18 @@
                                     <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource ChipBorder}" HorizontalOptions="Start" VerticalOptions="Center">
                                         <Label Text="{Binding Cep}" Style="{StaticResource ChipLabel}"/>
                                     </Border>
-                                    <Button Grid.Row="0" Grid.Column="1" Text="Editar" Style="{StaticResource ButtonSmall}" Clicked="OnEditButtonClicked"/>
-                                    <Button Grid.Row="0" Grid.Column="2" Text="Excluir" Style="{StaticResource ButtonDanger}" Clicked="OnDeleteButtonClicked"/>
+                                    <Button Grid.Row="0" Grid.Column="1" Text="Editar" Style="{StaticResource ButtonSmall}" Clicked="OnEditButtonClicked">
+                                        <Button.ImageSource>
+                                            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe3c9;" Size="16"
+                                                             Color="{AppThemeBinding Light={StaticResource InkLight}, Dark={StaticResource InkDark}}"/>
+                                        </Button.ImageSource>
+                                    </Button>
+                                    <Button Grid.Row="0" Grid.Column="2" Text="Excluir" Style="{StaticResource ButtonDanger}" Clicked="OnDeleteButtonClicked">
+                                        <Button.ImageSource>
+                                            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe872;" Size="16"
+                                                             Color="{AppThemeBinding Light={StaticResource DangerInkLight}, Dark={StaticResource DangerInkDark}}"/>
+                                        </Button.ImageSource>
+                                    </Button>
 
                                     <!-- Rua -->
                                     <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Nome}" Style="{StaticResource CardTitle}" Margin="0,8,0,0"/>
@@ -83,9 +103,12 @@
             </RefreshView>
 
             <!-- Floating Action Button -->
-            <Button Text="+" Command="{Binding AddLogradouroCommand}" Style="{StaticResource ButtonPrimary}"
-                    WidthRequest="58" HeightRequest="58" CornerRadius="29" Padding="0" FontSize="30"
+            <Button Command="{Binding AddLogradouroCommand}" Style="{StaticResource ButtonPrimary}"
+                    WidthRequest="58" HeightRequest="58" CornerRadius="29" Padding="0"
                     HorizontalOptions="End" VerticalOptions="End" Margin="24">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe145;" Size="28" Color="{StaticResource PrimaryDarkText}"/>
+                </Button.ImageSource>
                 <Button.Shadow>
                     <Shadow Brush="#E0A526" Offset="0,6" Radius="14" Opacity="0.45"/>
                 </Button.Shadow>

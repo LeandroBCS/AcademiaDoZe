@@ -38,7 +38,7 @@
                             </Border.GestureRecognizers>
                             <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
                                 <Border Grid.Row="0" Style="{StaticResource IconBadge}">
-                                    <Label Text="📍" FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Label Text="&#xe7f1;" Style="{StaticResource IconGlyph}"/>
                                 </Border>
                                 <Label Grid.Row="1" Text="{Binding TotalLogradouros}" Style="{StaticResource StatNumber}"/>
                                 <Label Grid.Row="2" Text="Logradouros" Style="{StaticResource StatLabel}"/>
@@ -52,7 +52,7 @@
                             </Border.GestureRecognizers>
                             <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
                                 <Border Grid.Row="0" Style="{StaticResource IconBadge}">
-                                    <Label Text="🏋️" FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Label Text="&#xe80c;" Style="{StaticResource IconGlyph}"/>
                                 </Border>
                                 <Label Grid.Row="1" Text="{Binding TotalAlunos}" Style="{StaticResource StatNumber}"/>
                                 <Label Grid.Row="2" Text="Alunos" Style="{StaticResource StatLabel}"/>
@@ -66,7 +66,7 @@
                             </Border.GestureRecognizers>
                             <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
                                 <Border Grid.Row="0" Style="{StaticResource IconBadge}">
-                                    <Label Text="👥" FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Label Text="&#xea67;" Style="{StaticResource IconGlyph}"/>
                                 </Border>
                                 <Label Grid.Row="1" Text="{Binding TotalColaboradores}" Style="{StaticResource StatNumber}"/>
                                 <Label Grid.Row="2" Text="Colaboradores" Style="{StaticResource StatLabel}"/>
@@ -80,7 +80,7 @@
                             </Border.GestureRecognizers>
                             <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
                                 <Border Grid.Row="0" Style="{StaticResource IconBadge}">
-                                    <Label Text="📋" FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Label Text="&#xefec;" Style="{StaticResource IconGlyph}"/>
                                 </Border>
                                 <Label Grid.Row="1" Text="{Binding TotalMatriculas}" Style="{StaticResource StatNumber}"/>
                                 <Label Grid.Row="2" Text="Matrículas" Style="{StaticResource StatLabel}"/>

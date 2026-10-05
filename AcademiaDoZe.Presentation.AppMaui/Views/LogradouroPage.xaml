@@ -21,7 +21,12 @@
                             <Border Grid.Column="0" Style="{StaticResource InputBorder}">
                                 <Entry Text="{Binding Logradouro.Cep}" Placeholder="00000-000" Keyboard="Numeric" VerticalOptions="Center"/>
                             </Border>
-                            <Button Grid.Column="1" Text="Buscar CEP" Command="{Binding SearchByCepCommand}" Style="{StaticResource ButtonPrimary}"/>
+                            <Button Grid.Column="1" Text="Buscar CEP" Command="{Binding SearchByCepCommand}" Style="{StaticResource ButtonPrimary}">
+                                <Button.ImageSource>
+                                    <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;"
+                                                     Color="{StaticResource PrimaryDarkText}"/>
+                                </Button.ImageSource>
+                            </Button>
                         </Grid>
                     </VerticalStackLayout>
                 </Border>
@@ -39,7 +44,7 @@
 
                         <!-- Nome -->
                         <VerticalStackLayout Spacing="6">
-                            <Label Text="NOME / RUA" Style="{StaticResource FieldLabel}"/>
+                            <Label Text="Nome / Rua" Style="{StaticResource FieldLabel}"/>
                             <Border Style="{StaticResource InputBorder}">
                                 <Entry Text="{Binding Logradouro.Nome}" Placeholder="Digite o nome da rua..." VerticalOptions="Center"/>
                             </Border>
@@ -47,7 +52,7 @@
 
                         <!-- Bairro -->
                         <VerticalStackLayout Spacing="6">
-                            <Label Text="BAIRRO" Style="{StaticResource FieldLabel}"/>
+                            <Label Text="Bairro" Style="{StaticResource FieldLabel}"/>
                             <Border Style="{StaticResource InputBorder}">
                                 <Entry Text="{Binding Logradouro.Bairro}" Placeholder="Digite o bairro..." VerticalOptions="Center"/>
                             </Border>
@@ -56,13 +61,13 @@
                         <!-- Cidade + Estado -->
                         <Grid ColumnDefinitions="*,120" ColumnSpacing="12">
                             <VerticalStackLayout Grid.Column="0" Spacing="6">
-                                <Label Text="CIDADE" Style="{StaticResource FieldLabel}"/>
+                                <Label Text="Cidade" Style="{StaticResource FieldLabel}"/>
                                 <Border Style="{StaticResource InputBorder}">
                                     <Entry Text="{Binding Logradouro.Cidade}" Placeholder="Digite a cidade..." VerticalOptions="Center"/>
                                 </Border>
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Column="1" Spacing="6">
-                                <Label Text="ESTADO (UF)" Style="{StaticResource FieldLabel}"/>
+                                <Label Text="Estado (UF)" Style="{StaticResource FieldLabel}"/>
                                 <Border Style="{StaticResource InputBorder}">
                                     <Entry Text="{Binding Logradouro.Estado}" Placeholder="SC" VerticalOptions="Center"/>
                                 </Border>
@@ -71,7 +76,7 @@
 
                         <!-- País -->
                         <VerticalStackLayout Spacing="6">
-                            <Label Text="PAÍS" Style="{StaticResource FieldLabel}"/>
+                            <Label Text="País" Style="{StaticResource FieldLabel}"/>
                             <Border Style="{StaticResource InputBorder}">
                                 <Entry Text="{Binding Logradouro.Pais}" Placeholder="Digite o país..." VerticalOptions="Center"/>
                             </Border>
@@ -86,8 +91,18 @@
         <!-- Barra de ações fixa na parte inferior -->
         <Border Grid.Row="1" Style="{StaticResource BottomBar}">
             <Grid ColumnDefinitions="*,*" ColumnSpacing="12" MaximumWidthRequest="720" HorizontalOptions="Center">
-                <Button Grid.Column="0" Text="Cancelar" Command="{Binding CancelCommand}" Style="{StaticResource ButtonSecondary}"/>
-                <Button Grid.Column="1" Text="Salvar" Command="{Binding SaveLogradouroCommand}" Style="{StaticResource ButtonPrimary}"/>
+                <Button Grid.Column="0" Text="Cancelar" Command="{Binding CancelCommand}" Style="{StaticResource ButtonSecondary}">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe5c9;"
+                                         Color="{AppThemeBinding Light={StaticResource InkLight}, Dark={StaticResource InkDark}}"/>
+                    </Button.ImageSource>
+                </Button>
+                <Button Grid.Column="1" Text="Salvar" Command="{Binding SaveLogradouroCommand}" Style="{StaticResource ButtonPrimary}">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe161;"
+                                         Color="{StaticResource PrimaryDarkText}"/>
+                    </Button.ImageSource>
+                </Button>
             </Grid>
         </Border>
 
