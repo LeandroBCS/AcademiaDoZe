@@ -15,6 +15,7 @@ public static class MauiProgram
         {
             fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+            // Adicione esta linha para registrar a fonte
             fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIcons");
         });
         // Configurar serviços da aplicação e repositórios
@@ -25,6 +26,10 @@ public static class MauiProgram
         builder.Services.AddTransient<LogradouroViewModel>();
         builder.Services.AddTransient<ColaboradorListViewModel>();
         builder.Services.AddTransient<ColaboradorViewModel>();
+        builder.Services.AddTransient<AlunoListViewModel>();
+        builder.Services.AddTransient<AlunoViewModel>();
+        builder.Services.AddTransient<MatriculaListViewModel>();
+        builder.Services.AddTransient<MatriculaViewModel>();
         // Registrar Views
         builder.Services.AddTransient<DashboardListPage>();
         builder.Services.AddTransient<LogradouroListPage>();
@@ -32,6 +37,10 @@ public static class MauiProgram
         builder.Services.AddTransient<ConfigPage>();
         builder.Services.AddTransient<ColaboradorListPage>();
         builder.Services.AddTransient<ColaboradorPage>();
+        builder.Services.AddTransient<AlunoListPage>();
+        builder.Services.AddTransient<AlunoPage>();
+        builder.Services.AddTransient<MatriculaListPage>();
+        builder.Services.AddTransient<MatriculaPage>();
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
