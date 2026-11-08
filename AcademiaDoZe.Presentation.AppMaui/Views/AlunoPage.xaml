@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:conv="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Converters" x:Class="AcademiaDoZe.Presentation.AppMaui.Views.AlunoPage" Title="Aluno" BackgroundColor="{AppThemeBinding Light=#F7F8FA, Dark=#101820}">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:conv="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Converters"
+             x:Class="AcademiaDoZe.Presentation.AppMaui.Views.AlunoPage"
+             Title="Aluno"
+             BackgroundColor="{AppThemeBinding Light=#F7F8FA, Dark=#101820}">
     <ContentPage.Resources>
         <conv:DateOnlyToDateTimeConverter x:Key="DateOnly"/>
         <conv:FotoToImageSourceConverter x:Key="Foto"/>
