@@ -107,11 +107,11 @@
         <!-- Search Bar -->
         <Border Grid.Row="0" Margin="15,10" Style="{StaticResource CardBorder}">
             <Grid ColumnDefinitions="Auto,10,*,10,Auto" VerticalOptions="Center">
-                <Picker Grid.Column="0" HeightRequest="40" HorizontalOptions="Start" ItemsSource="{Binding FilterTypes}" SelectedItem="{Binding SelectedFilterType}" Title="" VerticalOptions="Center" WidthRequest="110"/>
-                <Entry ClearButtonVisibility="WhileEditing" Grid.Column="2" HeightRequest="40" Placeholder="Digite o valor..." ReturnCommand="{Binding SearchMatriculasCommand}" Text="{Binding SearchText}" VerticalOptions="Center"/>
+                <Border Grid.Column="0" Style="{StaticResource InputBorder}" WidthRequest="116"><Picker HorizontalOptions="Start" ItemsSource="{Binding FilterTypes}" SelectedItem="{Binding SelectedFilterType}" Title="Filtro" VerticalOptions="Center"/></Border>
+                <Border Grid.Column="2" Style="{StaticResource InputBorder}"><Entry ClearButtonVisibility="WhileEditing" Placeholder="Digite o valor..." ReturnCommand="{Binding SearchMatriculasCommand}" Text="{Binding SearchText}" VerticalOptions="Center"/></Border>
                 <Button Command="{Binding SearchMatriculasCommand}" FontSize="14" Grid.Column="4" HeightRequest="40" Style="{StaticResource ButtonPrimary}" Text="" WidthRequest="80">
                     <Button.ImageSource>
-                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;"/>
+                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" Color="{StaticResource PrimaryDarkText}"/>
                     </Button.ImageSource>
                 </Button>
             </Grid>

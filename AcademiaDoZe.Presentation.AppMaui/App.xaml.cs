@@ -7,9 +7,12 @@ namespace AcademiaDoZe.Presentation.AppMaui;
 // Direcionando para a classe Application do MAUI
 public partial class App : Microsoft.Maui.Controls.Application
 {
-    public App()
+    private readonly AppShell _appShell;
+
+    public App(AppShell appShell)
     {
         InitializeComponent();
+        _appShell = appShell;
 
         // aplicar o tema salvo nas preferências
         AplicarTema();
@@ -26,7 +29,7 @@ public partial class App : Microsoft.Maui.Controls.Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return new Window(new AppShell());
+        return new Window(_appShell);
     }
 
     private void AplicarTema()

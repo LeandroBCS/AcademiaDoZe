@@ -13,7 +13,7 @@ Title="{Binding Title}">
         <converters:EnumDisplayConverter x:Key="EnumDisplay" />
     </ContentPage.Resources>
     <ScrollView>
-        <StackLayout Spacing="20">
+        <VerticalStackLayout Spacing="16" Padding="20,20,20,28" MaximumWidthRequest="720" HorizontalOptions="Center">
             <!-- CPF Section -->
             <Border Style="{StaticResource CardBorder}" Margin="15,10">
                 <StackLayout Spacing="5">
@@ -159,6 +159,6 @@ Title="{Binding Title}">
             </Grid>
             <!-- Loading Indicator -->
             <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" VerticalOptions="Center" HorizontalOptions="Center"/>
-        </StackLayout>
+        </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

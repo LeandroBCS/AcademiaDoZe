@@ -4,71 +4,115 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:conv="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Converters"
              x:Class="AcademiaDoZe.Presentation.AppMaui.Views.AlunoPage"
-             Title="Aluno"
-             BackgroundColor="{AppThemeBinding Light=#F7F8FA, Dark=#101820}">
+             Title="Aluno">
     <ContentPage.Resources>
-        <conv:DateOnlyToDateTimeConverter x:Key="DateOnly"/>
-        <conv:FotoToImageSourceConverter x:Key="Foto"/>
-        <Style TargetType="Label">
-            <Setter Property="TextColor" Value="{AppThemeBinding Light=#071B33, Dark=White}"/>
-        </Style>
+        <conv:DateOnlyToDateTimeConverter x:Key="DateOnly" />
+        <conv:FotoToImageSourceConverter x:Key="Foto" />
     </ContentPage.Resources>
-    <ScrollView>
-        <VerticalStackLayout Padding="{OnIdiom Phone='16,20', Desktop='32,28'}" Spacing="10" MaximumWidthRequest="900" HorizontalOptions="Center">
-            <Label Text="Dados do Aluno" FontSize="28" FontAttributes="Bold"/>
-            <Label Text="Campos com * são obrigatórios." TextColor="{AppThemeBinding Light=#45546A, Dark=#CBD5E1}"/>
-            <Image Source="{Binding Aluno.Foto, Converter={StaticResource Foto}}" HeightRequest="{OnIdiom Phone=120, Desktop=170}" WidthRequest="{OnIdiom Phone=120, Desktop=170}" Aspect="AspectFill" HorizontalOptions="Center" BackgroundColor="{AppThemeBinding Light=#E1E6ED, Dark=#334155}"/>
-            <Button Text="▣ Escolher foto (galeria ou câmera)" Command="{Binding SelecionarFotoCommand}"/>
-            <Label Text="Nome completo *"/>
-            <Entry Placeholder="Ex.: Kaio Fernandes Branco" Text="{Binding Aluno.Nome}"/>
-            <Grid ColumnDefinitions="{OnIdiom Phone='*', Desktop='*,*'}" RowDefinitions="{OnIdiom Phone='Auto,Auto', Desktop='Auto'}" ColumnSpacing="12" RowSpacing="10">
-                <VerticalStackLayout>
-                    <Label Text="CPF *"/>
-                    <Entry Placeholder="Somente números" Keyboard="Numeric" Text="{Binding Aluno.Cpf}"/>
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20,20,20,28" Spacing="16" MaximumWidthRequest="720" HorizontalOptions="Center">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Dados do aluno" Style="{StaticResource Headline}" />
+                    <Label Text="Preencha os dados para criar ou atualizar o cadastro." Style="{StaticResource StatLabel}" />
                 </VerticalStackLayout>
-                <VerticalStackLayout Grid.Column="{OnIdiom Phone=0, Desktop=1}" Grid.Row="{OnIdiom Phone=1, Desktop=0}">
-                    <Label Text="Nascimento *"/>
-                    <DatePicker Date="{Binding Aluno.DataNascimento, Converter={StaticResource DateOnly}, Mode=TwoWay}" MaximumDate="{x:Static sys:DateTime.Today}" xmlns:sys="clr-namespace:System;assembly=mscorlib"/>
-                </VerticalStackLayout>
+
+                <Border Style="{StaticResource CardBorder}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Dados pessoais" Style="{StaticResource CardTitle}" />
+                        <Image Source="{Binding Aluno.Foto, Converter={StaticResource Foto}}" HeightRequest="120" WidthRequest="120" Aspect="AspectFill" HorizontalOptions="Center" BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceAltLight}, Dark={StaticResource SurfaceAltDark}}" />
+                        <Button Text="Escolher foto" Command="{Binding SelecionarFotoCommand}" Style="{StaticResource ButtonSecondary}" HorizontalOptions="Center">
+                            <Button.ImageSource><FontImageSource FontFamily="MaterialIcons" Glyph="&#xe226;" Color="{AppThemeBinding Light={StaticResource InkLight}, Dark={StaticResource InkDark}}" /></Button.ImageSource>
+                        </Button>
+
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Nome completo *" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource InputBorder}"><Entry Text="{Binding Aluno.Nome}" Placeholder="Ex.: Kaio Fernandes Branco" VerticalOptions="Center" /></Border>
+                        </VerticalStackLayout>
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="CPF *" Style="{StaticResource FieldLabel}" />
+                                <Border Style="{StaticResource InputBorder}"><Entry Text="{Binding Aluno.Cpf}" Placeholder="Somente números" Keyboard="Numeric" VerticalOptions="Center" /></Border>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" Spacing="6">
+                                <Label Text="Nascimento *" Style="{StaticResource FieldLabel}" />
+                                <Border Style="{StaticResource InputBorder}"><DatePicker Date="{Binding Aluno.DataNascimento, Converter={StaticResource DateOnly}, Mode=TwoWay}" MaximumDate="{x:Static sys:DateTime.Today}" VerticalOptions="Center" /></Border>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Telefone *" Style="{StaticResource FieldLabel}" />
+                                <Border Style="{StaticResource InputBorder}"><Entry Text="{Binding Aluno.Telefone}" Placeholder="DDD + número" Keyboard="Telephone" VerticalOptions="Center" /></Border>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" Spacing="6">
+                                <Label Text="E-mail" Style="{StaticResource FieldLabel}" />
+                                <Border Style="{StaticResource InputBorder}"><Entry Text="{Binding Aluno.Email}" Placeholder="nome@exemplo.com" Keyboard="Email" VerticalOptions="Center" /></Border>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource CardBorder}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Endereço" Style="{StaticResource CardTitle}" />
+                        <Label Text="Busque um CEP já cadastrado para vincular o logradouro." Style="{StaticResource StatLabel}" />
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                            <Border Style="{StaticResource InputBorder}"><Entry Text="{Binding Aluno.Endereco.Cep}" Placeholder="00000-000" Keyboard="Numeric" VerticalOptions="Center" /></Border>
+                            <Button Grid.Column="1" Text="Buscar CEP" Command="{Binding BuscarCepCommand}" Style="{StaticResource ButtonPrimary}">
+                                <Button.ImageSource><FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" Color="{StaticResource PrimaryDarkText}" /></Button.ImageSource>
+                            </Button>
+                        </Grid>
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Logradouro" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource InputBorder}"><Entry Text="{Binding Aluno.Endereco.Nome}" IsReadOnly="True" VerticalOptions="Center" /></Border>
+                        </VerticalStackLayout>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Número *" Style="{StaticResource FieldLabel}" />
+                                <Border Style="{StaticResource InputBorder}"><Entry Text="{Binding Aluno.Numero}" Placeholder="Ex.: 123" VerticalOptions="Center" /></Border>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" Spacing="6">
+                                <Label Text="Complemento" Style="{StaticResource FieldLabel}" />
+                                <Border Style="{StaticResource InputBorder}"><Entry Text="{Binding Aluno.Complemento}" Placeholder="Apartamento, casa..." VerticalOptions="Center" /></Border>
+                            </VerticalStackLayout>
+                        </Grid>
+                        <Border Style="{StaticResource InfoBorder}">
+                            <Label Text="{Binding Aluno.Endereco.Bairro, StringFormat='Bairro: {0}'}" TextColor="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource PrimaryDark}}" />
+                        </Border>
+                        <Label Text="Campos com * são obrigatórios." Style="{StaticResource StatLabel}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource CardBorder}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Acesso ao sistema" Style="{StaticResource CardTitle}" />
+                        <Label Text="A senha é obrigatória no cadastro e opcional ao editar." Style="{StaticResource StatLabel}" />
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Senha" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource InputBorder}"><Entry Text="{Binding Aluno.Senha}" Placeholder="Crie uma senha" IsPassword="True" VerticalOptions="Center" /></Border>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Confirmar senha" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource InputBorder}"><Entry Text="{Binding ConfirmarSenha}" Placeholder="Repita a senha" IsPassword="True" VerticalOptions="Center" /></Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Border Grid.Row="1" Style="{StaticResource BottomBar}">
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" MaximumWidthRequest="720" HorizontalOptions="Center">
+                <Button Text="Cancelar" Command="{Binding CancelarCommand}" Style="{StaticResource ButtonSecondary}">
+                    <Button.ImageSource><FontImageSource FontFamily="MaterialIcons" Glyph="&#xe5c9;" Color="{AppThemeBinding Light={StaticResource InkLight}, Dark={StaticResource InkDark}}" /></Button.ImageSource>
+                </Button>
+                <Button Grid.Column="1" Text="Salvar aluno" Command="{Binding SalvarCommand}" Style="{StaticResource ButtonPrimary}">
+                    <Button.ImageSource><FontImageSource FontFamily="MaterialIcons" Glyph="&#xe161;" Color="{StaticResource PrimaryDarkText}" /></Button.ImageSource>
+                </Button>
             </Grid>
-            <Grid ColumnDefinitions="{OnIdiom Phone='*', Desktop='*,*'}" RowDefinitions="{OnIdiom Phone='Auto,Auto', Desktop='Auto'}" ColumnSpacing="12" RowSpacing="10">
-                <VerticalStackLayout>
-                    <Label Text="Telefone *"/>
-                    <Entry Placeholder="DDD + número" Keyboard="Telephone" Text="{Binding Aluno.Telefone}"/>
-                </VerticalStackLayout>
-                <VerticalStackLayout Grid.Column="{OnIdiom Phone=0, Desktop=1}" Grid.Row="{OnIdiom Phone=1, Desktop=0}">
-                    <Label Text="E-mail"/>
-                    <Entry Placeholder="nome@exemplo.com" Keyboard="Email" Text="{Binding Aluno.Email}"/>
-                </VerticalStackLayout>
-            </Grid>
-            <Label Text="Endereço (busque um CEP já cadastrado)" FontAttributes="Bold" Margin="0,10,0,0"/>
-            <Grid ColumnDefinitions="{OnIdiom Phone='*', Desktop='*,Auto'}" RowDefinitions="{OnIdiom Phone='Auto,Auto', Desktop='Auto'}" ColumnSpacing="12" RowSpacing="10">
-                <Entry Placeholder="CEP: 00000000" Keyboard="Numeric" Text="{Binding Aluno.Endereco.Cep}"/>
-                <Button Grid.Column="{OnIdiom Phone=0, Desktop=1}" Grid.Row="{OnIdiom Phone=1, Desktop=0}" Text="Buscar CEP" Command="{Binding BuscarCepCommand}"/>
-            </Grid>
-            <Label Text="Logradouro"/>
-            <Entry IsReadOnly="True" Text="{Binding Aluno.Endereco.Nome}"/>
-            <Grid ColumnDefinitions="{OnIdiom Phone='*', Desktop='*,*'}" RowDefinitions="{OnIdiom Phone='Auto,Auto', Desktop='Auto'}" ColumnSpacing="12" RowSpacing="10">
-                <VerticalStackLayout>
-                    <Label Text="Número *"/>
-                    <Entry Placeholder="Ex.: 123" Text="{Binding Aluno.Numero}"/>
-                </VerticalStackLayout>
-                <VerticalStackLayout Grid.Column="{OnIdiom Phone=0, Desktop=1}" Grid.Row="{OnIdiom Phone=1, Desktop=0}">
-                    <Label Text="Complemento"/>
-                    <Entry Placeholder="Apartamento, casa..." Text="{Binding Aluno.Complemento}"/>
-                </VerticalStackLayout>
-            </Grid>
-            <Label Text="Bairro / Cidade"/>
-            <Entry IsReadOnly="True" Text="{Binding Aluno.Endereco.Bairro}"/>
-            <Entry IsReadOnly="True" Text="{Binding Aluno.Endereco.Cidade}"/>
-            <Label Text="Senha (obrigatória no cadastro e opcional ao editar)"/>
-            <Entry Placeholder="Crie uma senha" IsPassword="True" Text="{Binding Aluno.Senha}"/>
-            <Label Text="Confirmar senha"/>
-            <Entry Placeholder="Repita a senha" IsPassword="True" Text="{Binding ConfirmarSenha}"/>
-            <Grid ColumnDefinitions="{OnIdiom Phone='*', Desktop='*,*'}" RowDefinitions="{OnIdiom Phone='Auto,Auto', Desktop='Auto'}" ColumnSpacing="12" RowSpacing="10" Margin="0,12,0,0">
-                <Button Text="Salvar" Command="{Binding SalvarCommand}"/>
-                <Button Grid.Column="{OnIdiom Phone=0, Desktop=1}" Grid.Row="{OnIdiom Phone=1, Desktop=0}" Text="Cancelar" BackgroundColor="{AppThemeBinding Light=#E1E6ED, Dark=#334155}" TextColor="{AppThemeBinding Light=#071B33, Dark=White}" Command="{Binding CancelarCommand}"/>
-            </Grid>
-        </VerticalStackLayout>
-    </ScrollView>
+        </Border>
+        <ActivityIndicator Grid.RowSpan="2" IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" VerticalOptions="Center" HorizontalOptions="Center" />
+    </Grid>
 </ContentPage>

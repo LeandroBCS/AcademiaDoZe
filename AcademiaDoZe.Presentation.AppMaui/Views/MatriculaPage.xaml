@@ -14,7 +14,7 @@
     </ContentPage.Resources>
 
     <ScrollView>
-        <StackLayout Spacing="16" Padding="0,10,0,20">
+        <VerticalStackLayout Spacing="16" Padding="20,20,20,28" MaximumWidthRequest="720" HorizontalOptions="Center">
 
             <!-- Card 1: Aluno -->
             <Border Style="{StaticResource CardBorder}" Margin="15,0">
@@ -209,6 +209,6 @@
             </Grid>
 
             <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" VerticalOptions="Center" HorizontalOptions="Center"/>
-        </StackLayout>
+        </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

@@ -16,9 +16,7 @@ public static class ApplicationDependencyInjection
         services.AddTransient<IColaboradorService, ColaboradorService>();
         services.AddTransient<IAlunoService, AlunoService>();
         services.AddTransient<IMatriculaService, MatriculaService>();
-
-        //services.AddTransient<IAcessoAlunoService, AcessoAlunoService>();
-        //services.AddTransient<IAcessoColaboradorService, AcessoColaboradorService>();
+        services.AddTransient<IAcessoService, AcessoService>();
 
         // AddScoped: cria uma instância do serviço por requisição HTTP.
         // AddSingleton: cria uma única instância do serviço durante toda a vida útil da aplicação.
@@ -44,18 +42,8 @@ public static class ApplicationDependencyInjection
             var config = provider.GetRequiredService<RepositoryConfig>();
             return (Func<IMatriculaRepository>)(() => new MatriculaRepository(config.ConnectionString, config.DatabaseType));
         });
-
-
-        //services.AddTransient(provider =>
-        //{
-        //    var config = provider.GetRequiredService<RepositoryConfig>();
-        //    return (Func<IAcessoAlunoRepository>)(() => new AcessoAlunoRepository(config.ConnectionString, config.DatabaseType));
-        //});
-        //services.AddTransient(provider =>
-        //{
-        //   var config = provider.GetRequiredService<RepositoryConfig>();
-        //    return (Func<IAcessoColaboradorRepository>)(() => new AcessoColaboradorRepository(config.ConnectionString, config.DatabaseType));
-        //});
+        services.AddTransient(provider => { var c=provider.GetRequiredService<RepositoryConfig>(); return (Func<IAcessoAlunoRepository>)(()=>new AcessoAlunoRepository(c.ConnectionString,c.DatabaseType)); });
+        services.AddTransient(provider => { var c=provider.GetRequiredService<RepositoryConfig>(); return (Func<IAcessoColaboradorRepository>)(()=>new AcessoColaboradorRepository(c.ConnectionString,c.DatabaseType)); });
 
 
         return services;

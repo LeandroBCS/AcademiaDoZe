@@ -26,6 +26,8 @@ public class AcessoColaborador : Entity, IAggregateRoot
             return Result<AcessoColaborador>.Failure(notifications);
         return Result<AcessoColaborador>.Success(new AcessoColaborador(id, colaborador!.Id, dataHora));
     }
+
+    public static AcessoColaborador Reconstituir(int id, int colaboradorId, DateTime dataHora) => new(id, colaboradorId, dataHora);
 }
 // Dependem da persistência:
 // Validar se já não ultrapassa o limite de: 8 horas se for ctl, 6 horas se for estágio.

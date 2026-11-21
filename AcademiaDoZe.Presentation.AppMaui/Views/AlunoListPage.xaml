@@ -1,42 +1,53 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:dto="clr-namespace:AcademiaDoZe.Application.DTOs;assembly=AcademiaDoZe.Application" x:Class="AcademiaDoZe.Presentation.AppMaui.Views.AlunoListPage" Title="Alunos" BackgroundColor="{AppThemeBinding Light=#F7F8FA, Dark=#101820}">
-    <ContentPage.Resources>
-        <Style TargetType="Label">
-            <Setter Property="TextColor" Value="{AppThemeBinding Light=#071B33, Dark=White}"/>
-        </Style>
-    </ContentPage.Resources>
-    <Grid Padding="{OnIdiom Phone='14,18', Desktop=24}" RowDefinitions="Auto,Auto,*" RowSpacing="12">
-        <Grid ColumnDefinitions="{OnIdiom Phone='*', Desktop='*,*'}" RowDefinitions="{OnIdiom Phone='Auto,Auto', Desktop='Auto'}" ColumnSpacing="12" RowSpacing="10">
-            <Button Text="← Início" BackgroundColor="{AppThemeBinding Light=#E1E6ED, Dark=#334155}" TextColor="{AppThemeBinding Light=#071B33, Dark=White}" Command="{Binding VoltarInicioCommand}"/>
-            <Button Grid.Column="{OnIdiom Phone=0, Desktop=1}" Grid.Row="{OnIdiom Phone=1, Desktop=0}" Text="✚ Novo aluno" Command="{Binding NovoCommand}"/>
-        </Grid>
-        <SearchBar Grid.Row="1" Placeholder="Busque por nome, CPF ou e-mail" Text="{Binding Busca}" SearchCommand="{Binding CarregarCommand}" />
-        <CollectionView Grid.Row="2" ItemsSource="{Binding Alunos}" SelectionMode="None">
-            <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical">
-                    <GridItemsLayout.Span>
-                        <OnIdiom x:TypeArguments="x:Int32" Phone="1" Tablet="2" Desktop="2" Default="1"/>
-                    </GridItemsLayout.Span>
-                </GridItemsLayout>
-            </CollectionView.ItemsLayout>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AcademiaDoZe.Presentation.AppMaui.ViewModels"
+             xmlns:dto="clr-namespace:AcademiaDoZe.Application.DTOs;assembly=AcademiaDoZe.Application"
+             x:Class="AcademiaDoZe.Presentation.AppMaui.Views.AlunoListPage"
+             x:Name="AlunosPage"
+             x:DataType="vm:AlunoListViewModel"
+             Title="Alunos">
+    <Grid RowDefinitions="Auto,*">
+        <Border Grid.Row="0" Style="{StaticResource CardBorder}" Margin="16,16,16,8" Padding="12">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+                <Border Style="{StaticResource InputBorder}"><SearchBar Placeholder="Nome, CPF ou e-mail" Text="{Binding Busca}" SearchCommand="{Binding CarregarCommand}" VerticalOptions="Center" /></Border>
+                <Button Grid.Column="1" Text="Novo aluno" Command="{Binding NovoCommand}" Style="{StaticResource ButtonPrimary}">
+                    <Button.ImageSource><FontImageSource FontFamily="MaterialIcons" Glyph="&#xe145;" Color="{StaticResource PrimaryDarkText}" /></Button.ImageSource>
+                </Button>
+            </Grid>
+        </Border>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Alunos}" SelectionMode="None" Margin="16,0">
+            <CollectionView.ItemsLayout><GridItemsLayout Orientation="Vertical" Span="{OnIdiom Phone=1, Tablet=2, Desktop=2, Default=1}" /></CollectionView.ItemsLayout>
+            <CollectionView.Footer><BoxView HeightRequest="24" Color="Transparent" /></CollectionView.Footer>
             <CollectionView.EmptyView>
-                <Label Text="Nenhum aluno encontrado." HorizontalOptions="Center" Margin="0,40"/>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10" Padding="30">
+                    <Border Style="{StaticResource IconBadge}" HorizontalOptions="Center"><Label Text="&#xe80c;" Style="{StaticResource IconGlyph}" FontSize="30" /></Border>
+                    <Label Text="Nenhum aluno encontrado" Style="{StaticResource CardTitle}" HorizontalOptions="Center" />
+                    <Label Text="Use o botão acima para cadastrar o primeiro aluno." Style="{StaticResource StatLabel}" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
             </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="dto:AlunoDto">
-                    <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1E293B}" Stroke="{AppThemeBinding Light=#E1E6ED, Dark=#475569}" StrokeShape="RoundRectangle 14" Margin="5" Padding="14">
-                        <Grid ColumnDefinitions="{OnIdiom Phone='*', Desktop='*,Auto'}" RowDefinitions="{OnIdiom Phone='Auto,Auto,Auto,Auto', Desktop='Auto,Auto,Auto'}">
-                            <Label Text="{Binding Nome}" FontAttributes="Bold" FontSize="18"/>
-                            <Label Grid.Row="1" Text="{Binding Cpf, StringFormat='CPF: {0}'}" TextColor="{AppThemeBinding Light=#45546A, Dark=#CBD5E1}"/>
-                            <Label Grid.Row="2" Text="{Binding Email, StringFormat='E-mail: {0}'}" TextColor="{AppThemeBinding Light=#45546A, Dark=#CBD5E1}"/>
-                            <HorizontalStackLayout Grid.Column="{OnIdiom Phone=0, Desktop=1}" Grid.Row="{OnIdiom Phone=3, Desktop=0}" Grid.RowSpan="{OnIdiom Phone=1, Desktop=3}" Spacing="6">
-                                <Button Text="✎" Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditarCommand}" CommandParameter="{Binding}"/>
-                                <Button Text="⌫" BackgroundColor="#B42318" TextColor="White" Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ExcluirCommand}" CommandParameter="{Binding}"/>
-                            </HorizontalStackLayout>
+                    <Border Style="{StaticResource CardBorder}" Margin="5">
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="5">
+                            <Label Text="{Binding Nome}" Style="{StaticResource CardTitle}" />
+                            <Border Grid.Column="1" Grid.RowSpan="3" Style="{StaticResource ChipBorder}" VerticalOptions="Start"><Label Text="&#xe80c;" Style="{StaticResource IconGlyph}" /></Border>
+                            <Label Grid.Row="1" Text="{Binding Cpf, StringFormat='CPF: {0}'}" Style="{StaticResource StatLabel}" />
+                            <Label Grid.Row="2" Text="{Binding Email, StringFormat='E-mail: {0}'}" Style="{StaticResource StatLabel}" />
+                            <Grid Grid.Row="3" Grid.ColumnSpan="2" ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,8,0,0">
+                                <Button Text="Editar" Command="{Binding BindingContext.EditarCommand, Source={x:Reference AlunosPage}}" CommandParameter="{Binding .}" Style="{StaticResource ButtonSmall}">
+                                    <Button.ImageSource><FontImageSource FontFamily="MaterialIcons" Glyph="&#xe3c9;" Color="{AppThemeBinding Light={StaticResource InkLight}, Dark={StaticResource InkDark}}" /></Button.ImageSource>
+                                </Button>
+                                <Button Grid.Column="1" Text="Excluir" Command="{Binding BindingContext.ExcluirCommand, Source={x:Reference AlunosPage}}" CommandParameter="{Binding .}" Style="{StaticResource ButtonDanger}">
+                                    <Button.ImageSource><FontImageSource FontFamily="MaterialIcons" Glyph="&#xe872;" Color="{AppThemeBinding Light={StaticResource DangerInkLight}, Dark={StaticResource DangerInkDark}}" /></Button.ImageSource>
+                                </Button>
+                            </Grid>
                         </Grid>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+        <ActivityIndicator Grid.RowSpan="2" IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" VerticalOptions="Center" HorizontalOptions="Center" />
     </Grid>
 </ContentPage>

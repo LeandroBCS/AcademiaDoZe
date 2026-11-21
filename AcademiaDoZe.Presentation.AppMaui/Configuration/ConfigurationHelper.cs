@@ -33,7 +33,8 @@ public static class ConfigurationHelper
     /// </summary>
     public static (string ConnectionString, AppDatabaseType DatabaseType) ObterConfiguracaoAtual()
     {
-        var databaseTypeStr = Preferences.Get("DatabaseType", AppDatabaseType.MySql.ToString());
+        // Uma instalação nova usa SQLite local; MySQL e SQL Server continuam disponíveis nas configurações.
+        var databaseTypeStr = Preferences.Get("DatabaseType", AppDatabaseType.Sqlite.ToString());
         if (!Enum.TryParse<AppDatabaseType>(databaseTypeStr, out var databaseType))
         {
             databaseType = AppDatabaseType.Sqlite;
@@ -41,9 +42,7 @@ public static class ConfigurationHelper
         string connectionString;
         if (databaseType == AppDatabaseType.Sqlite)
         {
-            var defaultDbPath = DeviceInfo.Platform == DevicePlatform.WinUI
-            ? @"C:\DEV\AcademiaDoZe\db_academia_do_ze.db"
-            : Path.Combine(FileSystem.AppDataDirectory, "db_academia_do_ze.db");
+            var defaultDbPath = Path.Combine(FileSystem.AppDataDirectory, "db_academia_do_ze.db");
             var dbPath = Preferences.Get("Sqlite_Caminho", Preferences.Get("SqliteCaminho", defaultDbPath));
             if (string.IsNullOrWhiteSpace(dbPath))
                 dbPath = defaultDbPath;

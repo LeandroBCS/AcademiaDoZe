@@ -27,6 +27,8 @@ public class AcessoAluno : Entity, IAggregateRoot
 
         return Result<AcessoAluno>.Success(new AcessoAluno(id, aluno!.Id, dataHora));
     }
+
+    public static AcessoAluno Reconstituir(int id, int alunoId, DateTime dataHora) => new(id, alunoId, dataHora);
 }
 // Dependem da persistência:
 // Validar se possui matrícula ativa
