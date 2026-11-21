@@ -8,55 +8,105 @@
     <ContentPage.Resources><conv:FotoToImageSourceConverter x:Key="Foto" /></ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Padding="20,20,20,28" Spacing="16" MaximumWidthRequest="720" HorizontalOptions="Center">
-            <VerticalStackLayout Spacing="2">
-                <Label Text="Controle de acesso" Style="{StaticResource Headline}" />
-                <Label Text="Registre a entrada e a saída de alunos e colaboradores." Style="{StaticResource StatLabel}" />
+        <VerticalStackLayout Padding="20,20,20,28" Spacing="16" MaximumWidthRequest="820" HorizontalOptions="Center">
+            <VerticalStackLayout Spacing="3" HorizontalOptions="Center">
+                <Label Text="Controle de Acesso / Catraca" Style="{StaticResource Headline}" HorizontalTextAlignment="Center" />
+                <Label Text="Selecione a pessoa para registrar entrada ou saída." Style="{StaticResource StatLabel}" HorizontalTextAlignment="Center" />
             </VerticalStackLayout>
 
             <Border Style="{StaticResource CardBorder}">
-                <VerticalStackLayout Spacing="14">
-                    <Label Text="Quem está entrando ou saindo?" Style="{StaticResource CardTitle}" />
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                        <Button Text="Aluno" Command="{Binding SelecionarAlunoCommand}" Style="{StaticResource ButtonPrimary}">
-                            <Button.ImageSource><FontImageSource FontFamily="MaterialIcons" Glyph="&#xe80c;" Color="{StaticResource PrimaryDarkText}" /></Button.ImageSource>
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Tipo de acesso" Style="{StaticResource CardTitle}" HorizontalTextAlignment="Center" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Button Text="Aluno" Command="{Binding SelecionarAlunoCommand}" Style="{StaticResource ButtonSecondary}">
+                            <Button.ImageSource><FontImageSource FontFamily="MaterialIcons" Glyph="&#xe80c;" Color="{AppThemeBinding Light={StaticResource InkLight}, Dark={StaticResource InkDark}}" /></Button.ImageSource>
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button" Binding="{Binding TipoAlunoSelecionado}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                    <Setter Property="TextColor" Value="{StaticResource PrimaryDarkText}" />
+                                    <Setter Property="BorderWidth" Value="0" />
+                                </DataTrigger>
+                            </Button.Triggers>
                         </Button>
                         <Button Grid.Column="1" Text="Colaborador" Command="{Binding SelecionarColaboradorCommand}" Style="{StaticResource ButtonSecondary}">
                             <Button.ImageSource><FontImageSource FontFamily="MaterialIcons" Glyph="&#xea67;" Color="{AppThemeBinding Light={StaticResource InkLight}, Dark={StaticResource InkDark}}" /></Button.ImageSource>
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button" Binding="{Binding TipoAlunoSelecionado}" Value="False">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                    <Setter Property="TextColor" Value="{StaticResource PrimaryDarkText}" />
+                                    <Setter Property="BorderWidth" Value="0" />
+                                </DataTrigger>
+                            </Button.Triggers>
                         </Button>
                     </Grid>
-                    <VerticalStackLayout Spacing="6">
-                        <Label Text="Localizar por nome ou CPF" Style="{StaticResource FieldLabel}" />
-                        <Border Style="{StaticResource InputBorder}"><SearchBar Placeholder="Digite o nome ou CPF" Text="{Binding Busca}" SearchCommand="{Binding BuscarCommand}" VerticalOptions="Center" /></Border>
-                    </VerticalStackLayout>
-                    <VerticalStackLayout Spacing="6">
-                        <Label Text="Pessoa" Style="{StaticResource FieldLabel}" />
-                        <Border Style="{StaticResource InputBorder}"><Picker Title="Selecione uma pessoa" ItemsSource="{Binding Pessoas}" SelectedItem="{Binding PessoaSelecionada}" VerticalOptions="Center" /></Border>
+                    <Border Style="{StaticResource ChipBorder}" HorizontalOptions="Center">
+                        <Label Text="{Binding TextoModo}" Style="{StaticResource ChipLabel}" />
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Localizar pessoa" Style="{StaticResource CardTitle}" HorizontalTextAlignment="Center" />
+                    <Border Style="{StaticResource InputBorder}">
+                        <SearchBar Placeholder="Digite nome ou CPF" Text="{Binding Busca}" SearchCommand="{Binding BuscarCommand}" VerticalOptions="Center" />
+                    </Border>
+                    <Label Text="{Binding ResultadoBusca}" IsVisible="{Binding BuscaSemResultados}" Style="{StaticResource StatLabel}" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Selecione a pessoa" Style="{StaticResource FieldLabel}" />
+                        <Border Style="{StaticResource InputBorder}">
+                            <Picker Title="Toque para escolher" ItemsSource="{Binding Pessoas}" SelectedItem="{Binding PessoaSelecionada}" VerticalOptions="Center" />
+                        </Border>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
             </Border>
 
             <Border Style="{StaticResource CardBorder}">
-                <VerticalStackLayout Spacing="14">
-                    <Label Text="Identificação" Style="{StaticResource CardTitle}" />
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Identificação e liberação" Style="{StaticResource CardTitle}" HorizontalTextAlignment="Center" />
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14" VerticalOptions="Center">
-                        <Border Style="{StaticResource IconBadge}" WidthRequest="64" HeightRequest="64">
-                            <Image Source="{Binding PessoaSelecionada.Foto, Converter={StaticResource Foto}}" WidthRequest="56" HeightRequest="56" Aspect="AspectFill" />
+                        <Border Style="{StaticResource IconBadge}" WidthRequest="72" HeightRequest="72">
+                            <Image Source="{Binding PessoaSelecionada.Foto, Converter={StaticResource Foto}}" WidthRequest="64" HeightRequest="64" Aspect="AspectFill" />
                         </Border>
-                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4">
+                        <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
                             <Label Text="{Binding PessoaSelecionada.Nome, TargetNullValue='Nenhuma pessoa selecionada'}" Style="{StaticResource CardTitle}" />
                             <Label Text="{Binding PessoaSelecionada.Cpf, StringFormat='CPF: {0}'}" Style="{StaticResource StatLabel}" />
+                            <Label Text="{Binding SituacaoPessoa}" Style="{StaticResource StatLabel}" />
                         </VerticalStackLayout>
                     </Grid>
-                    <Button Text="{Binding TextoAcao}" Command="{Binding RegistrarCommand}" Style="{StaticResource ButtonPrimary}">
-                        <Button.ImageSource><FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b5;" Color="{StaticResource PrimaryDarkText}" /></Button.ImageSource>
+                    <Button Text="{Binding TextoAcao}" Command="{Binding RegistrarCommand}" IsEnabled="{Binding PodeRegistrar}" Style="{StaticResource ButtonPrimary}">
+                        <Button.ImageSource><FontImageSource FontFamily="MaterialIcons" Glyph="&#xe897;" Color="{StaticResource PrimaryDarkText}" /></Button.ImageSource>
                     </Button>
-                    <Border Style="{StaticResource InfoBorder}"><Label Text="{Binding Mensagem}" TextColor="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource PrimaryDark}}" /></Border>
+                    <Border IsVisible="{Binding TemResultado}" Padding="14,12" StrokeThickness="0" StrokeShape="RoundRectangle 12"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource DangerSoftLight}, Dark={StaticResource DangerSoftDark}}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding AcessoAutorizado}" Value="True">
+                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SuccessSoftLight}, Dark={StaticResource SuccessSoftDark}}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <Label Text="&#xe002;" FontFamily="MaterialIcons" FontSize="20" TextColor="{AppThemeBinding Light={StaticResource DangerInkLight}, Dark={StaticResource DangerInkDark}}" VerticalOptions="Center">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding AcessoAutorizado}" Value="True">
+                                        <Setter Property="Text" Value="&#xe876;" />
+                                        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource SuccessInkLight}, Dark={StaticResource SuccessInkDark}}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Label Grid.Column="1" Text="{Binding Mensagem}" TextColor="{AppThemeBinding Light={StaticResource DangerInkLight}, Dark={StaticResource DangerInkDark}}" VerticalOptions="Center">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding AcessoAutorizado}" Value="True">
+                                        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource SuccessInkLight}, Dark={StaticResource SuccessInkDark}}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                        </Grid>
+                    </Border>
                 </VerticalStackLayout>
             </Border>
 
             <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                <Label Text="Acessos de hoje" Style="{StaticResource CardTitle}" VerticalOptions="Center" />
+                <Label Text="Acessos registrados hoje" Style="{StaticResource CardTitle}" VerticalOptions="Center" />
                 <Button Grid.Column="1" Text="Atualizar" Command="{Binding AtualizarCommand}" Style="{StaticResource ButtonSecondary}" HeightRequest="40" Padding="14,0">
                     <Button.ImageSource><FontImageSource FontFamily="MaterialIcons" Glyph="&#xe5d5;" Color="{AppThemeBinding Light={StaticResource InkLight}, Dark={StaticResource InkDark}}" /></Button.ImageSource>
                 </Button>
@@ -74,13 +124,13 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="dto:AcessoDto">
                         <Border Style="{StaticResource CardBorder}" Padding="14" Margin="0,2">
-                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                                 <Border Style="{StaticResource ChipBorder}" VerticalOptions="Start"><Label Text="&#xe8b5;" Style="{StaticResource IconGlyph}" FontSize="20" /></Border>
                                 <VerticalStackLayout Grid.Column="1" Spacing="3">
                                     <Label Text="{Binding Pessoa.Nome}" Style="{StaticResource CardTitle}" />
                                     <Label Text="{Binding Movimento, StringFormat='Movimento: {0}'}" Style="{StaticResource StatLabel}" />
-                                    <Label Text="{Binding DataHora, StringFormat='Horário: {0:HH:mm:ss}'}" Style="{StaticResource StatLabel}" />
                                 </VerticalStackLayout>
+                                <Label Grid.Column="2" Text="{Binding DataHora, StringFormat='{0:HH:mm:ss}'}" Style="{StaticResource ChipLabel}" VerticalOptions="Center" />
                             </Grid>
                         </Border>
                     </DataTemplate>

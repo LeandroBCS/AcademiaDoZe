@@ -17,3 +17,4 @@ public sealed class AcessoDto
     public required DateTime DataHora { get; init; }
 }
 public sealed record ResultadoAcessoDto(bool Autorizado, string Mensagem);
+public sealed record EstadoAcessoDto(bool EstaDentro, DateTime? EntradaAbertaEm);

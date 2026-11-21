@@ -1,4 +1,4 @@
-﻿using AcademiaDoZe.Application.DTOs;
+using AcademiaDoZe.Application.DTOs;
 using AcademiaDoZe.Application.Enums;
 using AcademiaDoZe.Application.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,58 +9,191 @@ namespace AcademiaDoZe.Presentation.AppMaui.ViewModels;
 
 public partial class AcessoViewModel(IAcessoService service) : BaseViewModel
 {
+    private CancellationTokenSource? _buscaCts;
+
     public ObservableCollection<PessoaAcessoDto> Pessoas { get; } = [];
     public ObservableCollection<AcessoDto> Acessos { get; } = [];
+
     [ObservableProperty] private AppPessoaTipo tipoSelecionado = AppPessoaTipo.Aluno;
     [ObservableProperty] private PessoaAcessoDto? pessoaSelecionada;
     [ObservableProperty] private string busca = string.Empty;
-    [ObservableProperty] private string mensagem = "Selecione uma pessoa para registrar o acesso.";
+    [ObservableProperty] private string mensagem = "Selecione uma pessoa para consultar o estado de acesso.";
+    [ObservableProperty] private string situacaoPessoa = "Selecione uma pessoa para consultar o estado.";
+    [ObservableProperty] private string resultadoBusca = string.Empty;
+    [ObservableProperty] private bool buscaSemResultados;
     [ObservableProperty] private bool acessoAutorizado;
+    [ObservableProperty] private bool temResultado;
     [ObservableProperty] private string textoAcao = "Registrar entrada";
+
+    public string TextoModo => TipoSelecionado == AppPessoaTipo.Aluno
+        ? "Modo atual selecionado: Aluno"
+        : "Modo atual selecionado: Colaborador";
+    public bool TipoAlunoSelecionado => TipoSelecionado == AppPessoaTipo.Aluno;
+    public bool PodeRegistrar => PessoaSelecionada is not null && !IsBusy;
+
+    partial void OnTipoSelecionadoChanged(AppPessoaTipo value)
+    {
+        OnPropertyChanged(nameof(TextoModo));
+        OnPropertyChanged(nameof(TipoAlunoSelecionado));
+    }
+
+    partial void OnPessoaSelecionadaChanged(PessoaAcessoDto? value)
+    {
+        OnPropertyChanged(nameof(PodeRegistrar));
+        if (value is null)
+        {
+            TextoAcao = "Registrar entrada";
+            SituacaoPessoa = "Nenhuma pessoa selecionada.";
+            return;
+        }
+        _ = AtualizarEstadoSelecionadoAsync(value);
+    }
+
+    partial void OnBuscaChanged(string value)
+    {
+        _buscaCts?.Cancel();
+        _buscaCts?.Dispose();
+        _buscaCts = new CancellationTokenSource();
+        _ = BuscarComAtrasoAsync(_buscaCts.Token);
+    }
 
     public async Task InicializarAsync()
     {
-        await BuscarAsync();
+        await BuscarPessoasAsync(CancellationToken.None);
         await AtualizarHistoricoAsync();
+        if (PessoaSelecionada is not null)
+            await AtualizarEstadoSelecionadoAsync(PessoaSelecionada);
     }
 
     [RelayCommand]
-    private async Task SelecionarAlunoAsync() { TipoSelecionado = AppPessoaTipo.Aluno; PessoaSelecionada = null; Busca = string.Empty; await BuscarAsync(); }
+    private Task SelecionarAlunoAsync() => SelecionarTipoAsync(AppPessoaTipo.Aluno);
+
     [RelayCommand]
-    private async Task SelecionarColaboradorAsync() { TipoSelecionado = AppPessoaTipo.Colaborador; PessoaSelecionada = null; Busca = string.Empty; await BuscarAsync(); }
-    [RelayCommand]
-    private async Task BuscarAsync()
+    private Task SelecionarColaboradorAsync() => SelecionarTipoAsync(AppPessoaTipo.Colaborador);
+
+    private async Task SelecionarTipoAsync(AppPessoaTipo tipo)
     {
-        Pessoas.Clear();
-        foreach (var pessoa in await service.ObterPessoasAsync(TipoSelecionado, Busca)) Pessoas.Add(pessoa);
+        TipoSelecionado = tipo;
+        PessoaSelecionada = null;
+        Mensagem = "Selecione uma pessoa para registrar o acesso.";
+        TemResultado = false;
+        await BuscarPessoasAsync(CancellationToken.None);
     }
-    partial void OnBuscaChanged(string value) => BuscarAoDigitar();
-    partial void OnPessoaSelecionadaChanged(PessoaAcessoDto? value) => AtualizarAcao();
 
-    private async void BuscarAoDigitar() => await BuscarAsync();
+    [RelayCommand]
+    private Task BuscarAsync() => BuscarPessoasAsync(CancellationToken.None);
 
-    private async void AtualizarAcao()
+    private async Task BuscarComAtrasoAsync(CancellationToken cancellationToken)
     {
-        if (PessoaSelecionada is null) { TextoAcao = "Registrar entrada"; return; }
-        var hoje = await service.ObterHojeAsync();
-        var quantos = hoje.Count(a => a.Tipo == PessoaSelecionada.Tipo && a.Pessoa.Id == PessoaSelecionada.Id);
-        TextoAcao = quantos % 2 == 0 ? "Registrar entrada" : "Registrar saída";
+        try
+        {
+            await Task.Delay(250, cancellationToken);
+            await BuscarPessoasAsync(cancellationToken);
+        }
+        catch (OperationCanceledException) { }
+    }
+
+    private async Task BuscarPessoasAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var pessoaAnterior = PessoaSelecionada;
+            var pessoas = await service.ObterPessoasAsync(TipoSelecionado, Busca, cancellationToken);
+            Pessoas.Clear();
+            foreach (var pessoa in pessoas)
+                Pessoas.Add(pessoa);
+
+            if (pessoaAnterior is not null)
+                PessoaSelecionada = Pessoas.FirstOrDefault(p => p.Id == pessoaAnterior.Id && p.Tipo == TipoSelecionado);
+
+            BuscaSemResultados = Pessoas.Count == 0;
+            ResultadoBusca = BuscaSemResultados
+                ? "Nenhuma pessoa encontrada. Confira o nome ou CPF e tente novamente."
+                : string.Empty;
+
+            if (PessoaSelecionada is null && Pessoas.Count == 0)
+                SituacaoPessoa = "Selecione uma pessoa encontrada para consultar o estado.";
+        }
+        catch (OperationCanceledException) { }
+        catch (Exception ex)
+        {
+            Mensagem = $"Não foi possível localizar pessoas: {ex.Message}";
+            AcessoAutorizado = false;
+            TemResultado = true;
+        }
+    }
+
+    private async Task AtualizarEstadoSelecionadoAsync(PessoaAcessoDto pessoa)
+    {
+        try
+        {
+            var estado = await service.ObterEstadoAsync(pessoa.Tipo, pessoa.Id);
+            TextoAcao = estado.EstaDentro ? "Registrar saída" : "Registrar entrada";
+            SituacaoPessoa = estado.EstaDentro
+                ? $"Dentro da academia desde {estado.EntradaAbertaEm:dd/MM/yyyy HH:mm}."
+                : "A pessoa selecionada está fora da academia.";
+        }
+        catch (Exception ex)
+        {
+            Mensagem = $"Não foi possível consultar o estado de acesso: {ex.Message}";
+            AcessoAutorizado = false;
+            TemResultado = true;
+        }
     }
 
     [RelayCommand]
     private async Task RegistrarAsync()
     {
-        if (PessoaSelecionada is null) { Mensagem = "Selecione uma pessoa."; AcessoAutorizado = false; return; }
-        var resultado = await service.RegistrarAsync(TipoSelecionado, PessoaSelecionada.Id);
-        Mensagem = resultado.Mensagem; AcessoAutorizado = resultado.Autorizado;
-        if (resultado.Autorizado) await AtualizarHistoricoAsync();
-        AtualizarAcao();
+        if (PessoaSelecionada is null)
+        {
+            Mensagem = "Selecione uma pessoa antes de registrar a entrada ou saída.";
+            AcessoAutorizado = false;
+            TemResultado = true;
+            return;
+        }
+
+        try
+        {
+            IsBusy = true;
+            OnPropertyChanged(nameof(PodeRegistrar));
+            var resultado = await service.RegistrarAsync(TipoSelecionado, PessoaSelecionada.Id);
+            Mensagem = resultado.Mensagem;
+            AcessoAutorizado = resultado.Autorizado;
+            TemResultado = true;
+            await AtualizarEstadoSelecionadoAsync(PessoaSelecionada);
+            if (resultado.Autorizado)
+                await AtualizarHistoricoAsync();
+        }
+        catch (Exception ex)
+        {
+            Mensagem = $"Falha ao registrar o acesso: {ex.Message}";
+            AcessoAutorizado = false;
+            TemResultado = true;
+        }
+        finally
+        {
+            IsBusy = false;
+            OnPropertyChanged(nameof(PodeRegistrar));
+        }
     }
 
-    [RelayCommand] private Task AtualizarAsync() => AtualizarHistoricoAsync();
+    [RelayCommand]
+    private Task AtualizarAsync() => AtualizarHistoricoAsync();
+
     private async Task AtualizarHistoricoAsync()
     {
-        Acessos.Clear();
-        foreach (var acesso in await service.ObterHojeAsync()) Acessos.Add(acesso);
+        try
+        {
+            var acessos = await service.ObterHojeAsync();
+            Acessos.Clear();
+            foreach (var acesso in acessos)
+                Acessos.Add(acesso);
+        }
+        catch (Exception ex)
+        {
+            Mensagem = $"Não foi possível carregar o histórico: {ex.Message}";
+            AcessoAutorizado = false;
+            TemResultado = true;
+        }
     }
 }

@@ -55,6 +55,11 @@
     <Color x:Key="DangerSoftDark">#3B1E20</Color>
     <Color x:Key="DangerInkLight">#B42318</Color>
     <Color x:Key="DangerInkDark">#FF8F8A</Color>
+    <Color x:Key="Success">#16A34A</Color>
+    <Color x:Key="SuccessSoftLight">#DCFCE7</Color>
+    <Color x:Key="SuccessSoftDark">#064E3B</Color>
+    <Color x:Key="SuccessInkLight">#166534</Color>
+    <Color x:Key="SuccessInkDark">#86EFAC</Color>
 
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>

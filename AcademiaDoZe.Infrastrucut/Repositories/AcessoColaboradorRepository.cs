@@ -24,8 +24,23 @@ public sealed class AcessoColaboradorRepository(string connectionString, Databas
     public async Task<AcessoColaborador?> ObterUltimoAcesso(int colaboradorId,CancellationToken cancellationToken=default)=>(await ObterAcessosPorColaboradorPeriodo(colaboradorId,cancellationToken:cancellationToken)).LastOrDefault();
     public async Task<TimeSpan> ObterHorasTrabalhadasNoDia(int colaboradorId,DateOnly data,CancellationToken cancellationToken=default)
     {
-        var eventos=(await ObterAcessosPorColaboradorPeriodo(colaboradorId,data,data,cancellationToken)).Select(x=>x.DataHora).ToArray(); var total=TimeSpan.Zero;
-        for(var i=0;i+1<eventos.Length;i+=2) total+=eventos[i+1]-eventos[i]; if(eventos.Length%2==1) total+=DateTime.Now-eventos[^1]; return total;
+        var eventos=(await ObterAcessosPorColaboradorPeriodo(colaboradorId,cancellationToken:cancellationToken))
+            .Select(x=>x.DataHora).Order().ToArray();
+        var inicioDia=data.ToDateTime(TimeOnly.MinValue);
+        var fimDia=inicioDia.AddDays(1);
+        var agora=DateTime.Now;
+        var total=TimeSpan.Zero;
+
+        for(var i=0;i<eventos.Length;i+=2)
+        {
+            var inicio=eventos[i];
+            var fim=i+1<eventos.Length?eventos[i+1]: (agora<fimDia?agora:fimDia);
+            if(fim<=inicio) continue;
+            var trechoInicio=inicio>inicioDia?inicio:inicioDia;
+            var trechoFim=fim<fimDia?fim:fimDia;
+            if(trechoFim>trechoInicio) total+=trechoFim-trechoInicio;
+        }
+        return total;
     }
     public async Task<AcessoColaborador?> ObterPorId(int id,CancellationToken cancellationToken=default){await using var cmd=await CreateCommandAsync("SELECT id_acesso,pessoa_id,data_hora FROM tb_acesso WHERE id_acesso=@Id AND pessoa_tipo=2",cancellationToken);cmd.AddParameter("@Id",id,DbType.Int32);await using var reader=await cmd.ExecuteReaderAsync(cancellationToken);return await reader.ReadAsync(cancellationToken)?AcessoColaborador.Reconstituir(Convert.ToInt32(reader["id_acesso"]),Convert.ToInt32(reader["pessoa_id"]),Convert.ToDateTime(reader["data_hora"])):null;}
     public async Task<IEnumerable<AcessoColaborador>> ObterTodos(CancellationToken cancellationToken=default)=>await ObterAcessosPorColaboradorPeriodo(cancellationToken:cancellationToken);
