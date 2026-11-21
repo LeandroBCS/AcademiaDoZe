@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:conv="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Converters"
+             xmlns:dto="clr-namespace:AcademiaDoZe.Application.DTOs;assembly=AcademiaDoZe.Application"
+             x:Class="AcademiaDoZe.Presentation.AppMaui.Views.AcessoPage"
+             Title="Controle de Acesso"
+             BackgroundColor="{AppThemeBinding Light=#F7F8FA, Dark=#101820}">
+    <ContentPage.Resources>
+        <conv:FotoToImageSourceConverter x:Key="Foto" />
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="{AppThemeBinding Light=#071B33, Dark=White}" />
+        </Style>
+    </ContentPage.Resources>
+    <ScrollView>
+        <VerticalStackLayout Padding="16,20" Spacing="14" MaximumWidthRequest="900" HorizontalOptions="Center">
+            <Label Text="Controle de Acesso" FontSize="28" FontAttributes="Bold" />
+            <Label Text="Registre entrada e saída de alunos e colaboradores." TextColor="{AppThemeBinding Light=#45546A, Dark=#CBD5E1}" />
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <Button Text="♙ Aluno" Command="{Binding SelecionarAlunoCommand}" />
+                <Button Grid.Column="1" Text="♟ Colaborador" Command="{Binding SelecionarColaboradorCommand}" BackgroundColor="{AppThemeBinding Light=#E1E6ED, Dark=#334155}" TextColor="{AppThemeBinding Light=#071B33, Dark=White}" />
+            </Grid>
+            <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1E293B}" Stroke="{AppThemeBinding Light=#E1E6ED, Dark=#475569}" StrokeShape="RoundRectangle 14" Padding="14">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Localizar pessoa" FontAttributes="Bold" FontSize="18" />
+                    <SearchBar Placeholder="Digite nome ou CPF" Text="{Binding Busca}" SearchCommand="{Binding BuscarCommand}" />
+                    <Label Text="Selecione a pessoa" />
+                    <Picker Title="Toque para escolher" ItemsSource="{Binding Pessoas}" SelectedItem="{Binding PessoaSelecionada}" />
+                </VerticalStackLayout>
+            </Border>
+            <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1E293B}" Stroke="{AppThemeBinding Light=#E1E6ED, Dark=#475569}" StrokeShape="RoundRectangle 14" Padding="14">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Identificação e liberação" FontAttributes="Bold" FontSize="18" />
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <Image Source="{Binding PessoaSelecionada.Foto, Converter={StaticResource Foto}}" WidthRequest="64" HeightRequest="64" Aspect="AspectFill" />
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="{Binding PessoaSelecionada.Nome, TargetNullValue='Nenhuma pessoa selecionada'}" FontAttributes="Bold" />
+                            <Label Text="{Binding PessoaSelecionada.Cpf, StringFormat='CPF: {0}'}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Button Text="{Binding TextoAcao}" Command="{Binding RegistrarCommand}" />
+                    <Border BackgroundColor="{AppThemeBinding Light=#E8F5E9, Dark=#14532D}" Padding="10" StrokeShape="RoundRectangle 10">
+                        <Label Text="{Binding Mensagem}" TextColor="{AppThemeBinding Light=#14532D, Dark=White}" />
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+            <Grid ColumnDefinitions="*,Auto">
+                <Label Text="Acessos registrados hoje" FontAttributes="Bold" FontSize="20" />
+                <Button Grid.Column="1" Text="↻ Atualizar" Command="{Binding AtualizarCommand}" />
+            </Grid>
+            <CollectionView ItemsSource="{Binding Acessos}" SelectionMode="None">
+                <CollectionView.EmptyView>
+                    <Label Text="Nenhum acesso registrado hoje." HorizontalOptions="Center" Margin="0,20" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:AcessoDto">
+                        <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1E293B}" Stroke="{AppThemeBinding Light=#E1E6ED, Dark=#475569}" StrokeShape="RoundRectangle 12" Padding="10" Margin="0,4">
+                            <Grid ColumnDefinitions="Auto,*">
+                                <Label Text="●" TextColor="{AppThemeBinding Light=#D4A72C, Dark=#FACC15}" FontSize="24" />
+                                <VerticalStackLayout Grid.Column="1">
+                                    <Label Text="{Binding Pessoa.Nome}" FontAttributes="Bold" />
+                                    <Label Text="{Binding Movimento, StringFormat='Movimento: {0}'}" FontSize="12" />
+                                    <Label Text="{Binding DataHora, StringFormat='Horário: {0:HH:mm:ss}'}" FontSize="12" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
