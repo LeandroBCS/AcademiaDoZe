@@ -14,10 +14,20 @@ public static class ColaboradorEnumMappingExtensions
     }
     public static ColaboradorVinculo ToDomain(this AppColaboradorVinculo appVinculo)
     {
-        return (ColaboradorVinculo)appVinculo;
+        return appVinculo switch
+        {
+            AppColaboradorVinculo.CLT => ColaboradorVinculo.CLT,
+            AppColaboradorVinculo.Estagio => ColaboradorVinculo.Estagio,
+            _ => throw new ArgumentOutOfRangeException(nameof(appVinculo), appVinculo, "Vínculo de colaborador inválido.")
+        };
     }
     public static AppColaboradorVinculo ToApplication(this ColaboradorVinculo domainVinculo)
     {
-        return (AppColaboradorVinculo)domainVinculo;
+        return domainVinculo switch
+        {
+            ColaboradorVinculo.CLT => AppColaboradorVinculo.CLT,
+            ColaboradorVinculo.Estagio => AppColaboradorVinculo.Estagio,
+            _ => throw new ArgumentOutOfRangeException(nameof(domainVinculo), domainVinculo, "Vínculo de colaborador inválido.")
+        };
     }
 }
