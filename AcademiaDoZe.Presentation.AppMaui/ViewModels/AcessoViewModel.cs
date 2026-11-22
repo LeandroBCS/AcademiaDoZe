@@ -44,9 +44,11 @@ public partial class AcessoViewModel(IAcessoService service) : BaseViewModel
         {
             TextoAcao = "Registrar entrada";
             SituacaoPessoa = "Nenhuma pessoa selecionada.";
+            Acessos.Clear();
             return;
         }
         _ = AtualizarEstadoSelecionadoAsync(value);
+        _ = AtualizarHistoricoAsync();
     }
 
     partial void OnBuscaChanged(string value)
@@ -182,11 +184,22 @@ public partial class AcessoViewModel(IAcessoService service) : BaseViewModel
 
     private async Task AtualizarHistoricoAsync()
     {
+        var pessoa = PessoaSelecionada;
+        Acessos.Clear();
+        if (pessoa is null)
+            return;
+
         try
         {
             var acessos = await service.ObterHojeAsync();
-            Acessos.Clear();
-            foreach (var acesso in acessos)
+            // Não exiba acessos de terceiros. Também confira a seleção novamente,
+            // pois ela pode ter mudado enquanto o histórico era carregado.
+            if (PessoaSelecionada is not { } pessoaAtual
+                || pessoaAtual.Id != pessoa.Id
+                || pessoaAtual.Tipo != pessoa.Tipo)
+                return;
+
+            foreach (var acesso in acessos.Where(a => a.Pessoa.Id == pessoa.Id && a.Tipo == pessoa.Tipo))
                 Acessos.Add(acesso);
         }
         catch (Exception ex)
