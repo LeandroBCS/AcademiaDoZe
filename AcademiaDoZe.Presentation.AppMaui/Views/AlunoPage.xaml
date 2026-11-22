@@ -28,7 +28,7 @@
 
                         <VerticalStackLayout Spacing="6">
                             <Label Text="Nome completo *" Style="{StaticResource FieldLabel}" />
-                            <Border Style="{StaticResource InputBorder}"><Entry Text="{Binding Aluno.Nome}" Placeholder="Ex.: Kaio Fernandes Branco" VerticalOptions="Center" /></Border>
+                            <Border Style="{StaticResource InputBorder}"><Entry Text="{Binding Aluno.Nome}" Placeholder="Ex.: Nome fictício Da Silva" VerticalOptions="Center" /></Border>
                         </VerticalStackLayout>
 
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
